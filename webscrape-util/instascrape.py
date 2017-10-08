@@ -6,47 +6,38 @@ import json
 import requests
 from pymongo import MongoClient
 
-## ALSO eventually need to scrap the top influencers for validation
-def setup_mongo_client(db_name, collection_name, address='mongodb://localhost:27017/'):
-    """ Return Mongo client and collection for record insertion.
+from scrape_util import setup_mongo_client, load_last_line, add_new_line
 
-    Args:
-        db_name (str): Database name.
-        collection_name (str): Collection name.
-        address (Optional[str]): Address to mongo database.
-            Defaults to 'mongodb://localhost:27017/)'.
-
-    Returns:
-        client (pymongo.MongoClient): Intantiated pymongo client.
-        collection (pymongo.Collection): Collection object for record insertion.
-    """
-    client = MongoClient(address)
-    db = client[db_name]
-    collection = db[collection_name]
-    return client, collection
-
-def load_last_line(filepath):
-    """Load json in last line of given file into dictionary.
-
-    Args:
-        filepath (str): Path to file with json.
-
-    Returns:
-        last_line (dict): Last line in file loaded as a dictionary.
-    """
-    with open(filepath, "r") as myfile:
-        last_line = json.loads(myfile.readlines()[-1])
-    return last_line
-
-def add_new_line(new_line,filepath):
-    """Add json in last line of given file as a dictionary.
-
-    Args:
-        filepath (str): Path to file with json.
-        new_line (dict): New line to be added to file.
-    """
-    with open(filepath, "a") as myfile:
-        myfile.write(json.dumps(new_line) + '\n')
+# def load_last_line(filepath):
+#     """Load json in last line of given file into dictionary.
+#
+#     Args:
+#         filepath (str): Path to file with json.
+#
+#     Returns:
+#         last_line (dict): Last line in file loaded as a dictionary.
+#
+#     Usage Example:
+#         user_dict = load_last_line(page_info_filepath)
+#     """
+#     with open(filepath, "r") as myfile:
+#         last_line = json.loads(myfile.readlines()[-1])
+#     return last_line
+#
+# def add_new_line(new_line,filepath):
+#     """Add json in last line of given file as a dictionary.
+#
+#     Args:
+#         filepath (str): Path to file with json.
+#         new_line (dict): New line to be added to file.
+#
+#     Returns: None
+#
+#     Usage Example:
+#         add_new_line(user_dict,page_info_filepath)
+#     """
+#     with open(filepath, "a") as myfile:
+#         myfile.write(json.dumps(new_line) + '\n')
 
 def insert_edge(response, collection):
     """Insert records into Mongo database.
@@ -76,14 +67,16 @@ def instascrape(page_info_filepath, num_requests):
     """
     Scrape instagram hashtag search
 
-    Input: page_info dictionary from first search
+    Args:
+        page_info_filepath (str): Filepath to text file with page_info dicts
+        num_requests (int): Number of pages to be scraped
 
     Action: saves influencer node information to pymongo database
 
     Output: None
     """
 
-    client, collection = setup_mongo_client('instascrape', 'test')
+    client, collection = setup_mongo_client('instascrape', 'test_demo1')
 
     page_info = load_last_line(page_info_filepath)
 
