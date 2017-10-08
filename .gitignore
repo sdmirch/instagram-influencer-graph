@@ -1,0 +1,6 @@
+*.ipynb_checkpoints/
+*.pyc
+*test*
+*Test*
+geckodriver.log
+myfile.txt
