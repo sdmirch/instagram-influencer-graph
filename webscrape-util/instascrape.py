@@ -76,7 +76,7 @@ def instascrape(page_info_filepath, num_requests):
     Output: None
     """
 
-    client, collection = setup_mongo_client('instascrape', 'test_demo1')
+    client, collection = setup_mongo_client('instascrape', 'test')
 
     page_info = load_last_line(page_info_filepath)
 

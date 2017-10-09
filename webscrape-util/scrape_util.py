@@ -31,12 +31,26 @@ def write_json(d, filepath):
 
     Args:
         d (dict): Dictionary to be written to file.
-        filepath (str): Filepath where influencer dictionary will be saved.
+        filepath (str): Filepath where dictionary will be saved.
 
     Output: None
     """
     with open(filepath, 'w') as fp:
         json.dump(d, fp)
+
+def load_json(filepath):
+    """
+    Load json from file using json.load.
+
+    Args:
+        filepath (str): Filepath with dictionary.
+
+    Output:
+        d (dict): Dictionary from filepath.
+    """
+    with open(filepath, 'r') as myfile:
+        d = json.load(myfile)
+    return d
 
 def load_last_line(filepath):
     """Load json in last line of given file into dictionary.
