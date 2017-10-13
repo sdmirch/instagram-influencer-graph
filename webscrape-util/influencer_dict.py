@@ -1,11 +1,5 @@
-import numpy as np
-from selenium import webdriver
-from bs4 import BeautifulSoup
-import time
-import json
-import requests
 from pymongo import MongoClient
-
+import json
 
 from scrape_util import setup_mongo_client, write_json
 
@@ -39,6 +33,6 @@ def create_influencer_dict(filepath):
         if sc_id_tuple[1] in influencers:
             influencers[sc_id_tuple[1]]['posts'].append(sc_id_tuple[0])
         else:
-            influencers[sc_id_tuple[1]] = {'posts':[sc_id_tuple[0]], 'username': None, 'followers':[]}
+            influencers[sc_id_tuple[1]] = {'posts':[sc_id_tuple[0]]}
 
     write_json(influencers, filepath)
