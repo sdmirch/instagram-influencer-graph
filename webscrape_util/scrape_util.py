@@ -112,3 +112,15 @@ def add_new_line(new_line,filepath):
     """
     with open(filepath, "a") as myfile:
         myfile.write(json.dumps(new_line) + '\n')
+
+def write_text(text,filepath):
+    """Write text to file.
+
+    Args:
+        filepath (str): Path to file.
+        text (str): Text written to file.
+
+    Returns: None
+    """
+    with open(filepath, "w") as myfile:
+        myfile.write(text)

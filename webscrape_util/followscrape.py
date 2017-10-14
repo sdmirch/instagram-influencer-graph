@@ -6,7 +6,33 @@ import json
 import requests
 from pymongo import MongoClient
 
-from scrape_util import setup_mongo_client, load_json, load_last_line, add_new_line
+from scrape_util import (
+    setup_mongo_client,
+    load_json,
+    load_last_line,
+    add_new_line,
+    load_list,
+    write_text)
+
+def find_next_influencer(filepath_influencers, filepath_scrapedinfluencers):
+    """
+    Finds the next influencer for followers scraping.
+
+    Args:
+        filepath_influencers (str): Filepath with ordered influencer list.
+        filepath_influencers (str): Filepath with list of scraped influencers.
+
+    Output:
+        next_influencer (str): Next influencer to be scraped.
+    """
+    influencers_list = load_list(filepath_influencers)
+    try:
+        last_scraped = load_last_line(filepath_scrapedinfluencers)
+        last_scraped_index = influencers_list.index(str(last_scraped))
+        next_influencer = influencers_list[last_scraped_index + 1]
+    except IndexError:
+        next_influencer = influencers_list[0]
+    return next_influencer
 
 
 def insert_edge(response, collection):
@@ -41,20 +67,20 @@ def followscrape(influencer_dict_filepath):
         influencer_dict_filepath (str): Filepath to text file with influencer dicts
         num_requests (int): Number of pages to be scraped
 
-    Action: saves influencer and follower node information to pymongo database
-
     Output: None
+
+    Example Usage:
+        followscrape()
     """
 
     #client, collection = setup_mongo_client('instascrape', 'followers')
 
-    influencer_dict = load_json(influencer_dict_filepath)
-    influencer_ids = set(influencers.keys())
+    next_influencer = find_next_influencer('data/ordered_influencers.txt', 'data/scraped_influencers.txt')
 
     init_url_search = "https://www.instagram.com/graphql/query/?query_id=17851374694183129&variables={{%22id%22:%22{}%22,%22first%22:20}}"
     base_url_search = "https://www.instagram.com/graphql/query/?query_id=17851374694183129&variables={{%22id%22:%22{}%22,%22first%22:20,%22after%22:%22{}%22}}"
 
-    driver.get(init_url_search.format('21167060'))
+    driver.get(init_url_search.format(next_influencer))
 
     # ? How to save ids that have been checked for follower
     # ? How to check ids that have already been checked
@@ -71,6 +97,7 @@ def followscrape(influencer_dict_filepath):
             #         followers.add(str(nodes[i]).split('>"')[1].split('"<')[0])
         # save the id and the followers somewhere, mongo db?, make any sets lists beforehand!
 
+    write_text(next_influencer, 'data/scraped_influencers.txt')
 
     return None
 
