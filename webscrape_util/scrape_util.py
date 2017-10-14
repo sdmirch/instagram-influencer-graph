@@ -39,6 +39,22 @@ def write_list(l, filepath):
         for item in l:
             myfile.write(str(item) + '\n')
 
+def load_list(filepath):
+    """
+    Load list from file.
+
+    Args:
+        filepath (str): Filepath with list.
+
+    Output:
+        l (list): List from filepath.
+    """
+    l = []
+    with open(filepath, "r") as myfile:
+        for line in myfile:
+            l.append(line.strip())
+    return l
+
 def write_json(d, filepath):
     """
     Write dictionary to file using json.dump.
