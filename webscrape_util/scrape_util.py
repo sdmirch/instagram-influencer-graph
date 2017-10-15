@@ -25,6 +25,39 @@ def setup_mongo_client(db_name, collection_name, address='mongodb://localhost:27
     collection = db[collection_name]
     return client, collection
 
+def selenium_instagram_login(driver, filepath_credentials):
+    """Logs into instagram with selenium.
+
+    Args:
+        driver (selenium webdriver): Generally initialized as Firefox.
+        filepath_credentials (str): filepath with login credentials.
+
+    Returns: None
+    """
+    creds = load_json(filepath_credentials)
+    driver.get("https://www.instagram.com")
+    time.sleep(np.random.uniform(2,3))
+
+    # Click on login
+    driver.find_element_by_css_selector('a._b93kq').click()
+    time.sleep(np.random.uniform(2,3))
+
+    # Enter username
+    username = driver.find_element_by_css_selector('input._ph6vk._o716c')
+    username.click()
+    username.send_keys(creds['username'])
+    time.sleep(np.random.uniform(1,2))
+
+    # Enter password
+    password = driver.find_element_by_name('password')
+    password.click()
+    password.send_keys(creds['password'])
+    time.sleep(np.random.uniform(1,2))
+
+    # Click on sign-in
+    driver.find_element_by_css_selector('span._t38eb._ov9ai').click()
+    time.sleep(np.random.uniform(1,2))
+
 def write_list(l, filepath):
     """
     Write list to file as text.
@@ -33,7 +66,7 @@ def write_list(l, filepath):
         l (list): List to be written to file.
         filepath (str): Filepath where list will be saved as text.
 
-    Output: None
+    Returns: None
     """
     with open(filepath, "w") as myfile:
         for item in l:
@@ -46,7 +79,7 @@ def load_list(filepath):
     Args:
         filepath (str): Filepath with list.
 
-    Output:
+    Returns:
         l (list): List from filepath.
     """
     l = []
@@ -63,7 +96,7 @@ def write_json(d, filepath):
         d (dict): Dictionary to be written to file.
         filepath (str): Filepath where dictionary will be saved.
 
-    Output: None
+    Returns: None
     """
     with open(filepath, 'w') as fp:
         json.dump(d, fp)
@@ -75,7 +108,7 @@ def load_json(filepath):
     Args:
         filepath (str): Filepath with dictionary.
 
-    Output:
+    Returns:
         d (dict): Dictionary from filepath.
     """
     with open(filepath, 'r') as myfile:

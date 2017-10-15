@@ -8,37 +8,6 @@ from pymongo import MongoClient
 
 from scrape_util import setup_mongo_client, load_last_line, add_new_line
 
-# def load_last_line(filepath):
-#     """Load json in last line of given file into dictionary.
-#
-#     Args:
-#         filepath (str): Path to file with json.
-#
-#     Returns:
-#         last_line (dict): Last line in file loaded as a dictionary.
-#
-#     Usage Example:
-#         user_dict = load_last_line(page_info_filepath)
-#     """
-#     with open(filepath, "r") as myfile:
-#         last_line = json.loads(myfile.readlines()[-1])
-#     return last_line
-#
-# def add_new_line(new_line,filepath):
-#     """Add json in last line of given file as a dictionary.
-#
-#     Args:
-#         filepath (str): Path to file with json.
-#         new_line (dict): New line to be added to file.
-#
-#     Returns: None
-#
-#     Usage Example:
-#         add_new_line(user_dict,page_info_filepath)
-#     """
-#     with open(filepath, "a") as myfile:
-#         myfile.write(json.dumps(new_line) + '\n')
-
 def insert_edge(response, collection):
     """Insert records into Mongo database.
 

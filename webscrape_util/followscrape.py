@@ -12,7 +12,8 @@ from scrape_util import (
     load_last_line,
     add_new_line,
     load_list,
-    write_text)
+    write_text,
+    selenium_instagram_login)
 
 def find_next_influencer(filepath_influencers, filepath_scrapedinfluencers):
     """
@@ -34,97 +35,90 @@ def find_next_influencer(filepath_influencers, filepath_scrapedinfluencers):
         next_influencer = influencers_list[0]
     return next_influencer
 
+def load_json_from_html(driver):
+    """Click on raw data and store it in json format.
 
-def insert_edge(response, collection):
+    Args:
+        driver (selenium webdriver): Generally initialized as Firefox.
+
+    Returns:
+        data_as_json (dict): data from raw-data tab as json.
+    """
+    time.sleep(np.random.uniform(1,2))
+    # Clicks on raw-data tab
+    driver.find_element_by_id('tab-1').click()
+    data = driver.find_element_by_css_selector('pre.data')
+    data_as_json = json.loads(data.text)
+    return data_as_json
+
+def insert_data(data_as_json, influencer_id, collection):
     """Insert records into Mongo database.
 
     Args:
         response (request response object): Response from request.get('url')
         collection (pymongo.Collection): Collection object for record insertion.
     """
-    edges = response.json()['data']['hashtag']['edge_hashtag_to_media']['edges']
-    for edge in edges:
-        collection.insert_one(edge)
+    followers = data_as_json['data']['user']['edge_followed_by']['edges']
+    collection.insert_one({'id':influencer_id,'follow_pack': followers})
 
-def get_page_info(response):
-    """Find and save page_info from response json.
+def get_page_info(data_as_json):
+    """Find and save page_info from json.
 
     Args:
-        response (request response object): Response from request.get('url')
+        rdata_as_json (dict): data from raw-data tab as json.
 
     Returns:
         page_info (dict): Dictionary from response json.
             Keys: 'has_next_page' (bool) and 'end_cursor' (unicode)
     """
-    page_info = response.json()['data']['hashtag']['edge_hashtag_to_media']['page_info']
+    page_info = data_as_json['data']['user']['edge_followed_by']['page_info']
     return page_info
 
-def followscrape(influencer_dict_filepath):
+def followscrape(num_requests):
     """
     Scrape instagram followers
 
     Args:
-        influencer_dict_filepath (str): Filepath to text file with influencer dicts
-        num_requests (int): Number of pages to be scraped
+        num_requests (int): Number of influencers to be scraped
 
     Output: None
-
-    Example Usage:
-        followscrape()
     """
 
-    #client, collection = setup_mongo_client('instascrape', 'followers')
+    client, collection = setup_mongo_client('instascrape', 'followers')
 
-    next_influencer = find_next_influencer('data/ordered_influencers.txt', 'data/scraped_influencers.txt')
+    driver = webdriver.Firefox()
+    selenium_instagram_login(driver, 'instagram_credentials.json')
 
     init_url_search = "https://www.instagram.com/graphql/query/?query_id=17851374694183129&variables={{%22id%22:%22{}%22,%22first%22:20}}"
-    base_url_search = "https://www.instagram.com/graphql/query/?query_id=17851374694183129&variables={{%22id%22:%22{}%22,%22first%22:20,%22after%22:%22{}%22}}"
+    base_url_search = "https://www.instagram.com/graphql/query/?query_id=17851374694183129&variables={{%22id%22:%22{}%22,%22first%22:500,%22after%22:%22{}%22}}"
 
-    driver.get(init_url_search.format(next_influencer))
+    for i in range(num_requests):
+        influencer_id = find_next_influencer('data/ordered_influencers.txt', 'data/scraped_influencers.txt')
 
-    # ? How to save ids that have been checked for follower
-    # ? How to check ids that have already been checked
-    # ? How to modularize
-    # for each id in the 1775 influencer ids:
-        # check a record of all the userids already scraped to make sure this one is new
-        #followers = set()
-        # search followers for id, while end_cursor == True
-            #driver.get(base_url_search.format(userid, end_cursor))
-            #soup = BeautifulSoup(driver.page_source, 'html.parser')
-            # nodes = soup.find_all('span','objectBox objectBox-string')
-            # for i in range(1,len(nodes)):
-            #     if (i-1)%4==0:
-            #         followers.add(str(nodes[i]).split('>"')[1].split('"<')[0])
-        # save the id and the followers somewhere, mongo db?, make any sets lists beforehand!
+        # Initial search for followers
+        driver.get(init_url_search.format(influencer_id))
+        data_as_json = load_json_from_html(driver)
+        insert_data(data_as_json, influencer_id, collection)
+        page_info = get_page_info(data_as_json)
+        page_counter = 1
+        print "Finished scraping {} pages for influencer {}".format(page_counter, influencer_id)
 
-    write_text(next_influencer, 'data/scraped_influencers.txt')
+        # Keep searching while followers still exist
+        while page_info['has_next_page']:
+            driver.get(base_url_search.format(influencer_id, str(page_info['end_cursor'])))
+            data_as_json = load_json_from_html(driver)
+            insert_data(data_as_json, influencer_id, collection)
+            page_info = get_page_info(data_as_json)
+            page_counter += 1
+            print "Finished scraping {} pages for influencer {}".format(page_counter, influencer_id)
+            time.sleep(np.random.uniform(7,10))
 
+
+        write_text(influencer_id, 'data/scraped_influencers.txt')
+        time.sleep(np.random.uniform(7,10))
+        print "Finished scraping {} influencers of {}".format(i+1, num_requests)
+
+    client.close()
+
+    print "\n Finished scraping {} influencers' followers".format(num_requests)
     return None
-
-
-
-
-    ### Below lies unchanged instascrape stuffs
-    # page_info = load_last_line(page_info_filepath)
-    #
-    # for i in range(num_requests):
-    #
-    #     if page_info['has_next_page']:
-    #         response = requests.get(base_url_search.format('12',str(page_info['end_cursor'])))
-    #
-    #         if response.status_code == 200:
-    #             insert_edge(response, collection)
-    #             page_info = get_page_info(response)
-    #             add_new_line(page_info,page_info_filepath)
-    #
-    #         else:
-    #             print "Status Code = " + str(response.status_code)
-    #             return None
-    #
-    #     time.sleep(np.random.uniform(15,45))
-    #     print "Finished scraping {} pages of {}".format(i+1, num_requests)
-    #
-    # client.close()
-    #
-    # print "\n Finished scraping {} pages of 12 influencers each".format(num_requests)
-    # return None
