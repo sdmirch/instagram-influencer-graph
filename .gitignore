@@ -5,3 +5,4 @@
 geckodriver.log
 ghostdriver.log
 instagram_credentials.json
+*.gml
