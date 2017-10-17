@@ -157,3 +157,17 @@ def write_text(text,filepath):
     """
     with open(filepath, "w") as myfile:
         myfile.write(text)
+
+def read_dict(filepath):
+    """Read dictionary from text file.
+
+    Args:
+        filepath (str): Path to file.
+
+    Returns:
+        d (dict): Dictionary stored in filepath.
+    """
+    with open(filepath, "r") as myfile:
+        d = json.load(myfile)
+
+    return d
