@@ -35,6 +35,9 @@ def create_influencer_dict(filepath_json, return_dict=False):
         else:
             influencers[sc_id_tuple[1]] = {'posts':[sc_id_tuple[0]]}
 
+    # Remove profiles that have been deleted since initial scraping
+    del influencers['4018066784']
+
     write_json(influencers, filepath_json)
 
     if return_dict:
