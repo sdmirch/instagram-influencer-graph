@@ -37,7 +37,7 @@ def make_fake_graph(G, filepath, num_followers=181507):
         G (nx.Graph()): Graph object, base graph of influencers and followers.
         filepath (str): Filepath where graph will be saved (.gml format)
         num_followers [Optional(int)]: Number of followers to be added from current
-            follower base and to be added as fake users. Total added is 2*num_followers.
+            nodes and to be added as fake users. Total added is 2*num_followers.
 
     Returns: None
     """
@@ -46,8 +46,9 @@ def make_fake_graph(G, filepath, num_followers=181507):
     G_fake.add_node("SelenaGomez")
 
     # Add n=181507 followers from follower base
-    follower_choices = set(G.nodes()).difference(set(influencers.keys()))
-    selena_followers = np.random.choice(list(follower_choices), size=181507, replace=False)
+    selena_followers = np.random.choice(G_fake.nodes(), size=181507, replace=False)
+    for follower in selena_followers:
+        G_fake.add_edge(follower, "SelenaGomez")
 
     # Add n=181507 fake followers who are not part of the follower base (not in community)
     for i in range(181507):
