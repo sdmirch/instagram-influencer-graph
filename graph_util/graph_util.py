@@ -7,7 +7,7 @@ plt.style.use('ggplot')
 def compare_centralities(G, top=5):
     """
     Compare centralities within a graph: degree, closeness, betweenness,
-    eigenvector, page-rank.
+    eigenvector, page-rank. Use smaller graphs!
 
     Args:
         G (nx.Graph()): Graph object.
@@ -72,3 +72,32 @@ def plot_centralities(G, x_axis='eigenvector', y_axis='degree'):
     ax.set_xlabel("Eigenvector Centrality")
     ax.set_ylabel("Degree Centrality")
     fig.show()
+
+def sorted_centrality(G, centrality='degree'):
+    """
+    Calculate and sort a centrality measure for a graph.
+
+    Args:
+        G (nx.Graph()): Graph object.
+        centrality (Optional[str]): Type of centrality measure, default degree.
+
+    Returns:
+        sorted_centrality (list of tuples): List of nodes sorted by centrality measure.
+    """
+
+    if centrality == 'degree':
+        c = nx.degree_centrality(G)
+    elif centrality == 'closeness':
+        c = nx.closeness_centrality(G)
+    elif centrality == 'betweenness':
+        c = nx.betweenness_centrality(G)
+    elif centrality == 'eigenvector':
+        c = nx.eigenvector_centrality(G)
+    elif centrality == 'pagerank':
+        p = nx.pagerank(G)
+    else:
+        return "Must choose degree, closeness, betweenness, eigenvector, or pagerank centrality"
+
+    sorted_centrality = (sorted(c.iteritems(), key=lambda x: x[1], reverse=True))
+
+    return sorted_centrality
