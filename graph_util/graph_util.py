@@ -1,5 +1,7 @@
 import networkx as nx
-
+import numpy as np
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
 
 
 def compare_centralities(G, top=5):
@@ -35,3 +37,38 @@ def compare_centralities(G, top=5):
             most_important.add(pair[0])
 
     return most_important
+
+def plot_centralities(G, x_axis='eigenvector', y_axis='degree'):
+    """
+    Compare two centralities within a graph (degree, closeness, betweenness,
+    eigenvector, pagerank) via plotting.
+
+    Args:
+        G (nx.Graph()): Graph object.
+        x_axis (Optional[str]): Type of centrality measure to go on the x-axis.
+        y_axis (Optional[str]): Type of centrality measure to go on the y-axis.
+
+    Returns:
+        plot of y_axis centrality measure v. x_axis centrality measure
+    """
+
+    x_dict = dict(nx.eigenvector_centrality(G))
+    y_dict = dict(nx.degree_centrality(G))
+
+    # Create lists of centralities matched by id
+    x = []
+    y = []
+    for k,v in y_dict.iteritems():
+        y.append(v)
+        x.append(x_dict[k])
+
+    x_line = np.linspace(0,max(max(x), max(y)),10)
+    y_line = x_line
+
+    fig, ax = plt.subplots()
+    ax.plot(x, y, 'bo', alpha=0.5)
+    ax.plot(x_line,y_line,'r-')
+    ax.set_title("Degree Centrality v. Eigenvector Centrality")
+    ax.set_xlabel("Eigenvector Centrality")
+    ax.set_ylabel("Degree Centrality")
+    fig.show()
