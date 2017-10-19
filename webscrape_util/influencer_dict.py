@@ -8,13 +8,13 @@ def create_influencer_dict(filepath_json, return_dict=False):
     Create a dictionary with influencer id and posts.
 
     Args:
-        filepath_json (str): Filepath where influencer dictionary will be saved as json
+        filepath_json (str): Filepath where influencer dictionary will be saved as json.
 
     Action: Saves influencer dictionary to filepath.
         influencers (dict)
             Keys: id
             Values (dict):
-                Keys: 'posts' (list),  'followers' (list), and 'username' (None)
+                Keys: 'posts' (list),  'followers' (list)
 
     Output: None
     """
@@ -40,6 +40,8 @@ def create_influencer_dict(filepath_json, return_dict=False):
 
     write_json(influencers, filepath_json)
 
+    client.close()
+
     if return_dict:
         return influencers
 
@@ -61,3 +63,59 @@ def order_influencers(filepath_json, filepath_txt):
     inf_sort = sorted(influencers, key=lambda x: len(influencers[x]['posts']), reverse=True)
 
     write_list(inf_sort, filepath_txt)
+
+def add_hashtag_posts_likes(d, user_id, x):
+    """
+    Utility function for create_hashtag_likes_dict.py, adds data to dictionary.
+
+    Args:
+        d (dict): Influencer dictionary.
+        user_id (str): user_id for key.
+        x (dict): MongoDB json record.
+    """
+    if len(x['node']['edge_media_to_caption']['edges']) != 0:
+        text = x['node']['edge_media_to_caption']['edges'][0]['node']['text'].split("#")
+        for item in text:
+            if len(item.split()) == 1:
+                d[user_id]['hashtags'].append(item)
+    d[user_id]['posts'].append(x['node']['shortcode'])
+    d[user_id]['likes'].append(x['node']['edge_liked_by']['count'])
+
+def create_hashtag_likes_dict(filepath_json, return_dict=False):
+    """
+    Create a dictionary with influencer id, hashtags, posts, and
+    number of likes for each post.
+
+    Args:
+        filepath_json (str): Filepath where dictionary will be saved as json.
+
+    Action: Saves influencer dictionary to filepath.
+        influencers (dict)
+            Keys: id
+            Values (dict):
+                Keys: 'hashtags' (list), posts (list),  'likes' (list)
+
+    Output: None
+    """
+
+    client, collection = setup_mongo_client('instascrape', 'test')
+
+    influencers = {}
+    cursor = collection.find({})
+    for x in cursor:
+        user_id = x['node']['owner']['id']
+        if user_id in influencers:
+            add_hashtag_posts_likes(influencers, user_id, x)
+        else:
+            influencers[user_id] = {'hashtags':[],'posts':[], 'likes':[]}
+            add_hashtag_posts_likes(influencers, user_id, x)
+
+    # Remove profiles that have been deleted since initial scraping
+    del influencers['4018066784']
+
+    client.close()
+
+    write_json(influencers, filepath_json)
+
+    if return_dict:
+        return influencers
