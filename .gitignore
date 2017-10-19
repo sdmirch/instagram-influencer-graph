@@ -8,5 +8,4 @@ instagram_credentials.json
 *.gml
 *.pajek
 *.pkl
-page_info.txt
-scraped_influencers.txt
+data_untracked
