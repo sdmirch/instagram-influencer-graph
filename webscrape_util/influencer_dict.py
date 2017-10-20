@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import json
+from collections import Counter
 
 from scrape_util import setup_mongo_client, write_json, write_list
 
@@ -119,3 +120,34 @@ def create_hashtag_likes_dict(filepath_json, return_dict=False):
 
     if return_dict:
         return influencers
+
+def list_of_hashtags(d):
+    """
+    Create a list of all the hashtags.
+
+    Args:
+        d (dict): Dictionary in format of returned object from
+        create_hashtag_likes_dict.
+
+    Output:
+        total_hashtags (list): List of all hashtags used.
+    """
+    total_hashtags = []
+    for value_dict in d.values():
+        for hashtag in value_dict['hashtags']:
+            total_hashtags.append(hashtag)
+    return total_hashtags
+
+def count_hashtags(total_hashtags):
+    """
+    Create Counter dictionary for hashtags.
+
+    Args:
+        total_hashtags (list): List of all hashtags used.
+
+    Output:
+        c (Counter): Counter dictionary with hashtags and frequency.
+    """
+    words_to_count = (word.lower() for word in total_hashtags)
+    c = Counter(words_to_count)
+    return c
