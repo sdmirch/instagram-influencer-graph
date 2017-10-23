@@ -101,3 +101,28 @@ def sorted_centrality(G, centrality='degree'):
     sorted_centrality = (sorted(c.iteritems(), key=lambda x: x[1], reverse=True))
 
     return sorted_centrality
+
+
+def likes_graph(G, d):
+    """
+    Update the trimmed graph to have edges weighted by likes.
+
+    Args:
+        G (nx.Graph()): Graph object, generally top 10 influencers from each
+            centrality measure graph object.
+        d (dict): Dictionary with ids for likes of a post for each influencer,
+            generally top 10 influencers from each centrality measure.
+
+    Returns:
+        gw (nx.Graph()): Graph object, edges weighted by likes.
+    """
+    gw = nx.DiGraph()
+
+    for influencer,follower in G.edges_iter(nbunch=d.keys()):
+        if influencer != 'SelenaGomez':
+            # If another influencer likes an influencer's post, it is weighted
+            if follower in d[influencer]['likes']:
+                gw.add_weighted_edges_from([(follower,influencer,2)])
+            else:
+                gw.add_weighted_edges_from([(follower,influencer,1)])
+    return gw
