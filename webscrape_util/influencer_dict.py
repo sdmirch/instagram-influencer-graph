@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import json
+import networkx as nx
 from collections import Counter
 
 from scrape_util import setup_mongo_client, write_json, write_list
@@ -151,3 +152,17 @@ def count_hashtags(total_hashtags):
     words_to_count = (word.lower() for word in total_hashtags)
     c = Counter(words_to_count)
     return c
+
+def add_total_followers(G, d):
+    """
+    Add total number of followers to a dictionary.
+
+    Args:
+        G (nx.Graph()): Graph object.
+        d (dict): Dictionary, generally with hastags, likes, and posts.
+
+    Output: None
+    """
+    for influencer in d:
+        d[influencer]['num_follow'] = len(G.in_edges(influencer))
+    return d
