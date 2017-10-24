@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import json
 import networkx as nx
 from collections import Counter
+from unidecode import unidecode
 
 from scrape_util import setup_mongo_client, write_json, write_list
 
@@ -166,3 +167,52 @@ def add_total_followers(G, d):
     for influencer in d:
         d[influencer]['num_follow'] = len(G.in_edges(influencer))
     return d
+
+def add_posts_captions(d, user_id, x):
+    """
+    Utility function for create_caption_dict.py, adds data to dictionary.
+
+    Args:
+        d (dict): Caption dictionary.
+        user_id (str): user_id for key.
+        x (dict): MongoDB json record.
+    """
+    # Add post
+    d[user_id]['posts'].append(x['node']['shortcode'])
+
+    # Add caption
+    if len(x['node']['edge_media_to_caption']['edges']) != 0:
+        text = x['node']['edge_media_to_caption']['edges'][0]['node']['text']
+        decoded_text = unidecode(text)
+        cleaned_caption = ' '.join(filter(lambda x:x[0] not in '#\*[@', decoded_text.split()))
+        d[user_id]['caption'].append(cleaned_caption)
+
+
+def create_caption_dict():
+    """
+    Create a dictionary with influencer ids, list of posts, and list of captions.
+
+    Args: None
+
+    Output:
+        captions (dict): Dcitionary with influencer id, list of posts, and list of captions.s
+    """
+
+    client, collection = setup_mongo_client('instascrape', 'test')
+
+    captions = {}
+    cursor = collection.find({})
+    for x in cursor:
+        user_id = x['node']['owner']['id']
+        if user_id in captions:
+            add_posts_captions(captions, user_id, x)
+        else:
+            captions[user_id] = {'posts':[], 'caption':[]}
+            add_posts_captions(captions, user_id, x)
+
+    # Remove profiles that have been deleted since initial scraping
+    del captions['4018066784']
+
+    client.close()
+
+    return captions
