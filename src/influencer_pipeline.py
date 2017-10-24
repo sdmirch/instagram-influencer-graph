@@ -46,10 +46,18 @@ def calc_interaction_score(d):
         on likes and followers.
 
     Args:
-        d (dict): Dictionary with ids for likes of a post for each influencer, number
-            of likes, number of followers.
+        d (dict): Dictionary with user ids, number of likes, and number of followers.
 
     Returns:
         sorted_interaction_score
     """
-    pass
+    interaction_score = {}
+
+    for user_id in d.keys():
+        interaction_score[user_id] = (1.0*d[user_id]['max_likes']/d[user_id]['num_follow'])
+
+    # Add Selena Gomez for test
+    interaction_score['SelenaGomez'] = 0.05
+
+    sorted_interaction_score = (sorted(interaction_score.iteritems(), key=lambda x: x[1], reverse=True))
+    return sorted_interaction_score
