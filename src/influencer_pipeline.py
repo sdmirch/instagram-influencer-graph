@@ -24,16 +24,32 @@ def reduce_by_critical_mass(G, crit_mass=5000):
 
 def calc_community_influence_score(G):
     """
-    Calculate and sort by eigenvector_centrality for a graph.
+    Calculate and sort by community influence scores, which is eigenvector centrality
+        for a graph.
 
     Args:
         G (nx.Graph()): Graph object.
 
     Returns:
-        sorted_centrality (list of tuples): List of nodes sorted by eigenvector
+        sorted_influence_score (list of tuples): List of nodes sorted by eigenvector
             centrality.
     """
 
     c = nx.eigenvector_centrality(G)
-    sorted_centrality = (sorted(c.iteritems(), key=lambda x: x[1], reverse=True))
-    return sorted_centrality
+    sorted_influence_score = (sorted(c.iteritems(), key=lambda x: x[1], reverse=True))
+    return sorted_influence_score
+
+
+def calc_interaction_score(d):
+    """
+    Calculate and sort by interaction scores for reduced graph based
+        on likes and followers.
+
+    Args:
+        d (dict): Dictionary with ids for likes of a post for each influencer, number
+            of likes, number of followers.
+
+    Returns:
+        sorted_interaction_score
+    """
+    pass
