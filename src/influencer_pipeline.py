@@ -1,4 +1,6 @@
 import networkx as nx
+import pandas as pd
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 def reduce_by_critical_mass(G, crit_mass=5000):
@@ -64,15 +66,36 @@ def calc_interaction_score(G, d):
     sorted_interaction_score = (sorted(interaction_score.iteritems(), key=lambda x: x[1], reverse=True))
     return sorted_interaction_score
 
-def calc_authenticity_score(d):
+def calc_authenticity_score(G, captions):
     """
     Calculate and sort by authenticity scores for reduced graph based
         on compound sentiment analysis score.
 
     Args:
-        d (dict): Dictionary with user ids, number of likes, and number of followers.
+        G (nx.Graph()): Graph object.
+        captions (dict): Dictionary with user ids and captions.
 
     Returns:
-        sorted_interaction_score
+        sorted_authenticity_score
     """
-    pass
+    analyzer = SentimentIntensityAnalyzer()
+    top_influencers = G.nodes()
+    top_influencers.remove("SelenaGomez")
+
+    caption_sentiment = {}
+    for user_id in top_influencers:
+        for caption in captions[user_id]['caption']:
+            vs = analyzer.polarity_scores(caption)
+            if user_id in caption_sentiment:
+                caption_sentiment[user_id].append(vs)
+            else:
+                caption_sentiment[user_id] = [vs]
+
+    caption_sentiment_means = {}
+    for user_id in caption_sentiment:
+        df = pd.DataFrame(caption_sentiment[user_id])
+        # Subtract compound score from 1 to penalize more positive captions
+        caption_sentiment_means[user_id] = 1 - dict(df.mean())['compound']
+
+    sorted_authenticity_score = (sorted(caption_sentiment_means.iteritems(), key=lambda x: x[1], reverse=True))
+    return sorted_authenticity_score
