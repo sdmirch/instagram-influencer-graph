@@ -40,12 +40,13 @@ def calc_community_influence_score(G):
     return sorted_influence_score
 
 
-def calc_interaction_score(d):
+def calc_interaction_score(G, d):
     """
     Calculate and sort by interaction scores for reduced graph based
         on likes and followers.
 
     Args:
+        G (nx.Graph()): Graph object.
         d (dict): Dictionary with user ids, number of likes, and number of followers.
 
     Returns:
@@ -53,11 +54,25 @@ def calc_interaction_score(d):
     """
     interaction_score = {}
 
-    for user_id in d.keys():
-        interaction_score[user_id] = (1.0*d[user_id]['max_likes']/d[user_id]['num_follow'])
-
-    # Add Selena Gomez for test
-    interaction_score['SelenaGomez'] = 0.05
+    for user_id in G.nodes():
+        if user_id == 'SelenaGomez':
+            # Add Selena Gomez for test
+            interaction_score['SelenaGomez'] = 0.05
+        else:
+            interaction_score[user_id] = (1.0*d[user_id]['max_likes']/d[user_id]['num_follow'])
 
     sorted_interaction_score = (sorted(interaction_score.iteritems(), key=lambda x: x[1], reverse=True))
     return sorted_interaction_score
+
+def calc_authenticity_score(d):
+    """
+    Calculate and sort by authenticity scores for reduced graph based
+        on compound sentiment analysis score.
+
+    Args:
+        d (dict): Dictionary with user ids, number of likes, and number of followers.
+
+    Returns:
+        sorted_interaction_score
+    """
+    pass
