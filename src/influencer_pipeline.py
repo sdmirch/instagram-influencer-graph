@@ -112,3 +112,56 @@ def calc_authenticity_score(G, captions, returned='list'):
         return sorted_authenticity_score
     else:
         return caption_sentiment_means
+
+def normalize_values(d):
+    """
+    Return dictionary with normalized values (0 to 1).
+
+    Args:
+        d (dict): Dictionary with user ids and raw scores.
+
+    Returns:
+        d_norm (dict): Dictionary with user ids and normalized scores.
+    """
+    minimum = min(d.iteritems(), key= lambda x: x[1])[1]
+    maximum = max(d.iteritems(), key= lambda x: x[1])[1]
+
+    d_norm = {}
+    for user_id in d:
+        d_norm[user_id] = (d[user_id] - minimum) / (maximum - minimum)
+
+    return d_norm
+
+def calc_overall_score(influence_score, interaction_score, authenticity_score):
+    """
+    Calculate overall scores and save all types of scores to one dictionary.
+
+    Args:
+        influence_score (dict): Dictionary with user ids and influence scores.
+        interaction_score (dict): Dictionary with user ids and interaction scores.
+        authenticity_score (dict): Dictionary with user ids and authenticity scores.
+
+    Returns:
+        scores
+    """
+    scores = {}
+    users = influence_score.keys()
+
+    # Normalize scores dictionaries
+    influence_normed = normalize_values(influence_score)
+    interaction_normed = normalize_values(interaction_score)
+    authenticity_normed = normalize_values(authenticity_score)
+
+    # Add normalized scores types to scores
+    for user_id in users:
+        scores[user_id] = {'influence':None, 'interaction':None,
+                            'authenticity':None, 'final':None}
+        scores[user_id]['influence'] = influence_normed[user_id]
+        scores[user_id]['interaction'] = interaction_normed[user_id]
+        scores[user_id]['authenticity'] = authenticity_normed[user_id]
+
+        # Add overall score to scores
+        scores[user_id]['final'] = (0.6*influence_normed[user_id] +
+                            0.3*interaction_normed[user_id] +
+                            0.1*authenticity_normed[user_id])
+    return scores
