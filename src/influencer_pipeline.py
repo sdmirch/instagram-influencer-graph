@@ -1,7 +1,7 @@
 import networkx as nx
 import pandas as pd
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-
+from webscrape_util.scrape_util import load_json
 
 def reduce_by_critical_mass(G, crit_mass=5000):
     """
@@ -142,7 +142,7 @@ def calc_overall_score(influence_score, interaction_score, authenticity_score):
         authenticity_score (dict): Dictionary with user ids and authenticity scores.
 
     Returns:
-        scores
+        scores (dict): Dictionary with all score types, and final scores.
     """
     scores = {}
     users = influence_score.keys()
@@ -164,4 +164,32 @@ def calc_overall_score(influence_score, interaction_score, authenticity_score):
         scores[user_id]['final'] = (0.6*influence_normed[user_id] +
                             0.3*interaction_normed[user_id] +
                             0.1*authenticity_normed[user_id])
+    return scores
+
+def find_top_influencers(G, filepath_interactions, filepath_captions):
+    """
+    Find top influencers based on a graph of influencers and followers,
+    numbers of likes, and authenticity of posts.
+
+    Args:
+        G (nx.Graph()): Graph object, with all influencers and followers.
+        filepath_interactions (str): Filepath to json with interactions dictionary.
+        filepath_captions (str): Filepath to json with captions dictionary.
+
+    Returns:
+        scores (dict): Dictionary with all score types, and final scores.
+    """
+    # Reduce by in-degree
+    G_reduced = reduce_by_critical_mass(G)
+    interactions_dict = load_json(filepath_interactions)
+    captions_dict = load_json(filepath_captions)
+
+    # Calculate different scores
+    influence_score = calc_community_influence_score(G_reduced, returned='dict')
+    interaction_score = calc_interaction_score(G_reduced, interactions_dict, returned='dict')
+    authenticity_score = calc_authenticity_score(G_reduced, captions_dict, returned='dict')
+
+    # Calculate final scores
+    scores = calc_overall_score(influence_score, interaction_score, authenticity_score)
+
     return scores
