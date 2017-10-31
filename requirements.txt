@@ -1,0 +1,11 @@
+# Requirements without version specifiers
+# must have MongoDB
+matplotlib
+numpy
+pandas
+networkx
+pymongo
+vaderSentiment
+selenium
+bs4
+requests
