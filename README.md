@@ -32,13 +32,13 @@ A social network graph (Digraph in NetworkX, graph_util/make_graph.py) is constr
 
 ## Modeling
 
-### Assumptions about "Elite" Power-Middle Influencers:
+### Assumptions about Top Power-Middle Influencers:
 - They have a critical mass following so that enough people will view their content.
 - They interact with their community so followers are more likely to like or comment on posts.
 - They influence a distinct community, therefore they are not just a celebrity with millions of random followers.
 - They post authentic content and are not obviously marketing in an insincere way.
 
-### Modeling to Identify "Elite" Power-Middle Influencers:
+### Modeling to Identify Top Power-Middle Influencers:
 - Critical Mass Filter: influencers must have more than 5000 followers.
 - Interaction Score: equal to the ratio of likes to followers.
 - Influencer Score: equal to eigenvector centrality which gives higher scores to influencers who are connected to other key members of the community.
@@ -46,5 +46,5 @@ A social network graph (Digraph in NetworkX, graph_util/make_graph.py) is constr
 
 ## Evaluation
 Performance was evaluated by:
-- Determining if elite influencers were already endorsing products, meaning that industry experts had deemed them to be influencers already.
-- Checking if elite influencers on the leaderboard shave posts which show up in the "top results" of the search page for the #womenwhoclimb hashtag, which shows trending content.
+- Determining if top influencers were already endorsing products, meaning that industry experts had deemed them to be influencers already.
+- Checking if top influencers on the leaderboard shave posts which show up in the "top results" of the search page for the #womenwhoclimb hashtag, which shows trending content.
