@@ -6,7 +6,7 @@ from webscrape_util.scrape_util import load_json
 def reduce_by_critical_mass(G, crit_mass=5000):
     """
     Reduces graph by removing nodes that have less than a specific number of
-        followers (critical mass).
+        followers (critical mass, default=5000).
 
     Args:
         G (nx.Graph()): Graph object, with all influencers and followers.
