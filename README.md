@@ -1,7 +1,16 @@
-# Identifying Power-Middle Influencers on Instagram using graph and sentiment analysis
+# Identifying Power-Middle Influencers on Instagram
+## using graph and sentiment analysis
 
 ## tl;dr
 I identified the top power-middle influencers on Instagram using graph and sentiment analysis. Power-middle influencers have a devoted following and tend to have a higher interaction rate with their followers, and therefore can make more authentic and affordable endorsements of niche products.
+
+Directory | Description
+------------ | -------------
+data | selected graphs and dictionaries used in this project
+graph_util | scripts for creating graphs and calculating centralities
+images | EDA and README figures
+src | script for pipeline to calculate top influencers
+webscrape_util | scripts for requesting/scraping the GraphQL API
 
 ## Business Question
 
