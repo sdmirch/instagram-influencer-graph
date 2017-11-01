@@ -13,9 +13,6 @@ images | EDA and README figures
 src | script for pipeline to calculate top influencers
 webscrape_util | scripts for requesting/scraping the GraphQL API
 
-## Pretty Version
-Check out the website [here](https://sdmirch.github.io/Power-Middle-Influencers/).
-
 ## Business Question
 
 If a company is marketing a niche product, it may not be a wise idea to request promotion from someone with a large (millions) social media following - it is clear that they have been solicited to sponsor certain brands or items, and therefore seems less authentic. To market to a smaller audience, it may be more affordable and effective to identify a “power-middle” influencer, who would be able to market to a smaller, intimate audience. These influencers will be more influential to the smaller but more loyal following they have amassed. How do you find power-middle influencers who will be the most influential to the group of people you are trying to target?
