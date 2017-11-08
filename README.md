@@ -20,9 +20,9 @@ If a company is marketing a niche product, it may not be a wise idea to request 
 ## Data Understanding and Preparation
 
 ### General Outline of Data Collection:
- - First, I choose a community, take female climbers for instance.
- - Then, I have to identify potential power-middle influencers; I did this by finding people who posted content with the hashtag #womenwhoclimb on Instagram (using requests, see webscrape_util/instascrape.py).
- - I estimated the rest of the community by finding people who followed these potential influencers (using selenium, see webscrape_util/followscrape.py).
+ - Choose a community, take female climbers for instance.
+ - Identify potential power-middle influencers; I did this by finding people who posted content with the hashtag #womenwhoclimb on Instagram (using requests, see webscrape_util/instascrape.py).
+ - Estimated the rest of the community by finding people who followed these potential influencers (using selenium, see webscrape_util/followscrape.py).
 
 ### Conceptualization:
 A social network graph (Digraph in NetworkX, graph_util/make_graph.py) is constructed using the influencers and followers. This graph can be used to identify power-middle influencers and other interesting features about the community.
