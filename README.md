@@ -15,7 +15,9 @@ webscrape_util | scripts for requesting/scraping the GraphQL API
 
 ## Business Question
 
-If a company is marketing a niche product, it may not be a wise idea to request promotion from someone with a large (millions) social media following - it is clear that they have been solicited to sponsor certain brands or items, and therefore seems less authentic. To market to a smaller audience, it may be more affordable and effective to identify a “power-middle” influencer, who would be able to market to a smaller, intimate audience. These influencers will be more influential to the smaller but more loyal following they have amassed. How do you find power-middle influencers who will be the most influential to the group of people you are trying to target?
+Requesting promotion of a product from a celebrity with a large (millions) social media following is not just expensive - it is obvious to followers that they have been solicited to sponsor certain brands or items, and therefore seems less authentic. To market to a smaller, targeted audience, it is more affordable and effective to identify a “power-middle” influencer. These influencers will be more influential to their intimate and loyal following they have amassed.
+
+How do you find power-middle influencers who will be the most influential to the group of people you are trying to target?
 
 ## Data Understanding and Preparation
 
