@@ -14,7 +14,11 @@ src | script for pipeline to calculate top influencers
 webscrape_util | scripts for requesting/scraping the GraphQL API
 
 
-### Under construction...
+
+
+
+
+![Title](images/Title.png)
 
 ## Business Question
 
@@ -25,29 +29,29 @@ How do you find power-middle influencers who will be the most influential to the
 ## Data Understanding and Preparation
 
 ### General Outline of Data Collection:
- - Choose a community, take female climbers for instance.
- - Identify potential power-middle influencers; I did this by finding people who posted content with the hashtag #womenwhoclimb on Instagram (using requests, see webscrape_util/instascrape.py).
- - Estimated the rest of the community by finding people who followed these potential influencers (using selenium, see webscrape_util/followscrape.py).
+ - Choose a community: Take female climbers for instance.
+ - Identify potential power-middle influencers: Find people who posted content with the hashtag #womenwhoclimb on Instagram (using requests, see webscrape_util/instascrape.py).
+ - Estimate the rest of the community: Find people influenced by the influencers, therefore find people who followed these potential influencers (using selenium, see webscrape_util/followscrape.py).
 
 ### Conceptualization:
 A social network graph (Digraph in NetworkX, graph_util/make_graph.py) is constructed using the influencers and followers. This graph can be used to identify power-middle influencers and other interesting features about the community.
 * Number of nodes: 2268840
 * Number of edges: 3582464
-
+* Number of potential influencers: 1775
 
 ## Modeling
 
 ### Assumptions about Top Power-Middle Influencers:
-- They have a critical mass following so that enough people will view their content.
-- They interact with their community so followers are more likely to like or comment on posts.
-- They influence a distinct community, therefore they are not just a celebrity with millions of random followers.
-- They post authentic content and are not obviously marketing in an insincere way.
+- They have a *critical mass* following so that enough people will view their content.
+- They *interact* with their community so followers are more likely to like or comment on posts.
+- They *influence* a distinct community, therefore they are not just a celebrity with millions of random followers.
+- They post *authentic* content and are not obviously marketing in an insincere way.
 
 ### Modeling to Identify Top Power-Middle Influencers:
-- Critical Mass Filter: influencers must have more than 5000 followers.
-- Interaction Score: equal to the ratio of likes to followers.
-- Influencer Score: equal to eigenvector centrality which gives higher scores to influencers who are connected to other key members of the community.
-- Authenticity Score: inversely proportional to the positive sentiment in their captions with the assumptions that marketing text is often overly positive and followers are more likely to trust influencers that are more candid.
+- *Critical Mass Filter*: influencers must have more than 5000 followers.
+- *Interaction Score*: equal to the ratio of likes to followers.
+- *Influencer Score*: equal to eigenvector centrality which gives higher scores to influencers who are connected to other key members of the community.
+- *Authenticity Score*: inversely proportional to the positive sentiment in their captions with the assumptions that marketing text is often overly positive and followers are more likely to trust influencers that are more candid.
 
 ## Evaluation
 Performance was evaluated by:
