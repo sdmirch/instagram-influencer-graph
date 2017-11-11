@@ -2,7 +2,7 @@
 # Using Graph and Sentiment Analysis
 
 
-![Title](images/Title.png)
+![Title](images/Title_woname.png)
 
 
 ## tl;dr
