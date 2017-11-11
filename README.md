@@ -1,6 +1,10 @@
 # Identifying Power-Middle Influencers on Instagram
 # Using Graph and Sentiment Analysis
 
+
+![Title](images/Title.png)
+
+
 ## tl;dr
 Power-Middle influencers on Instagram are a more effective and authentic option for marketing niche products to targeted communities. I created a methodology to select, construct, and analyze community networks within Instagram. Elite Power-Middle influencers were identified using social centrality measures and sentiment analysis of captions. Technologies used include Python, NetworkX, MongoDB, Selenium, and vaderSentiment.
 
@@ -13,12 +17,6 @@ images | EDA and README figures
 src | script for pipeline to calculate top influencers
 webscrape_util | scripts for requesting/scraping the GraphQL API
 
-
-
-
-
-
-![Title](images/Title.png)
 
 ## Business Question
 
