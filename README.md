@@ -13,6 +13,9 @@ images | EDA and README figures
 src | script for pipeline to calculate top influencers
 webscrape_util | scripts for requesting/scraping the GraphQL API
 
+
+### Under construction...
+
 ## Business Question
 
 Requesting promotion of a product from a celebrity with a large (millions) social media following is not just expensive - it is obvious to followers that they have been solicited to sponsor certain brands or items, and therefore seems less authentic. To market to a smaller, targeted audience, it is more affordable and effective to identify a “power-middle” influencer. These influencers will be more influential to their intimate and loyal following they have amassed.
