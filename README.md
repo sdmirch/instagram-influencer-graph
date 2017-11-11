@@ -1,9 +1,4 @@
-# Identifying Power-Middle Influencers on Instagram
-# Using Graph and Sentiment Analysis
-
-
 ![Title](images/Title_woname.png)
-
 
 ## tl;dr
 Power-Middle influencers on Instagram are a more effective and authentic option for marketing niche products to targeted communities. I created a methodology to select, construct, and analyze community networks within Instagram. Elite Power-Middle influencers were identified using social centrality measures and sentiment analysis of captions. Technologies used include Python, NetworkX, MongoDB, Selenium, and vaderSentiment.
@@ -27,6 +22,9 @@ How do you find power-middle influencers who will be the most influential to the
 ## Data Understanding and Preparation
 
 ### General Outline of Data Collection:
+
+![Data Collection](images/DataCollection.png)
+
  - Choose a community: Take female climbers for instance.
  - Identify potential power-middle influencers: Find people who posted content with the hashtag #womenwhoclimb on Instagram (using requests, see webscrape_util/instascrape.py).
  - Estimate the rest of the community: Find people influenced by the influencers, therefore find people who followed these potential influencers (using selenium, see webscrape_util/followscrape.py).
@@ -47,9 +45,21 @@ A social network graph (Digraph in NetworkX, graph_util/make_graph.py) is constr
 
 ### Modeling to Identify Top Power-Middle Influencers:
 - *Critical Mass Filter*: influencers must have more than 5000 followers.
+
 - *Interaction Score*: equal to the ratio of likes to followers.
+
 - *Influencer Score*: equal to eigenvector centrality which gives higher scores to influencers who are connected to other key members of the community.
+
+![Influence Score](images/InfluenceScore.png)
+
 - *Authenticity Score*: inversely proportional to the positive sentiment in their captions with the assumptions that marketing text is often overly positive and followers are more likely to trust influencers that are more candid.
+
+![Authenticity Score](images/AuthenticityScore.png)
+
+
+Those scores are weighted and summed to determine and overall score:
+
+![Overall Score](images/OverallScore.png)
 
 ## Evaluation
 Performance was evaluated by:
