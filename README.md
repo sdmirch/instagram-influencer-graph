@@ -57,7 +57,7 @@ A social network graph (Digraph in NetworkX, graph_util/make_graph.py) is constr
 ![Authenticity Score](images/AuthenticityScore.png)
 
 
-Those scores are weighted and summed to determine and overall score:
+Those scores are weighted and summed to determine an overall score:
 
 ![Overall Score](images/OverallScore.png)
 
