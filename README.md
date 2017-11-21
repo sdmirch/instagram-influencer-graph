@@ -64,4 +64,4 @@ Those scores are weighted and summed to determine an overall score:
 ## Evaluation
 Performance was evaluated by:
 - Determining if top influencers were already endorsing products, meaning that industry experts had deemed them to be influencers already.
-- Checking if top influencers on the leaderboard shave posts which show up in the "top results" of the search page for the #womenwhoclimb hashtag, which shows trending content.
+- Checking if top influencers on the leaderboard have posts which show up in the "top results" of the search page for the #womenwhoclimb hashtag, which shows trending content.
