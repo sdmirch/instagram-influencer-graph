@@ -36,27 +36,24 @@ def selenium_instagram_login(driver, filepath_credentials):
     """
     creds = load_json(filepath_credentials)
     driver.get("https://www.instagram.com")
-    time.sleep(np.random.uniform(2,3))
-
-    # Click on login
-    driver.find_element_by_css_selector('a._b93kq').click()
-    time.sleep(np.random.uniform(2,3))
+    time.sleep(np.random.uniform(2, 3))
 
     # Enter username
-    username = driver.find_element_by_css_selector('input._ph6vk._o716c')
+    username = driver.find_element_by_name('username')
     username.click()
     username.send_keys(creds['username'])
-    time.sleep(np.random.uniform(1,2))
+    time.sleep(np.random.uniform(1, 2))
 
     # Enter password
     password = driver.find_element_by_name('password')
     password.click()
     password.send_keys(creds['password'])
+    password.send_keys(u'\ue007')
     time.sleep(np.random.uniform(1,2))
 
     # Click on sign-in
-    driver.find_element_by_css_selector('span._t38eb._ov9ai').click()
-    time.sleep(np.random.uniform(1,2))
+    #driver.find_element_by_css_selector().click()
+    time.sleep(np.random.uniform(1, 2))
 
 def write_list(l, filepath):
     """

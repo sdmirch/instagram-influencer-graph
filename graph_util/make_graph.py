@@ -1,3 +1,4 @@
+from pandas.tests.extension.numpy_.test_numpy_nested import np
 from pymongo import MongoClient
 import json
 import networkx as nx
@@ -15,7 +16,6 @@ def make_graph(filepath, directed=True):
     Returns: None
     """
     client, collection = setup_mongo_client('instascrape', 'followers')
-
     if directed:
         G = nx.DiGraph()
     else:
@@ -56,3 +56,7 @@ def make_fake_graph(G, filepath, num_followers=181507):
         G_fake.add_edge(random_generated_user, "SelenaGomez")
 
     nx.write_gml(G_fake, filepath)
+
+
+if __name__ == '__main__':
+    make_graph("/home/emil/Desktop/instagram-influencer-graph/graph_util/file.gml")
