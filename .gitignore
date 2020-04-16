@@ -9,3 +9,5 @@ instagram_credentials.json
 *.pajek
 *.pkl
 data_untracked
+venv
+.idea
