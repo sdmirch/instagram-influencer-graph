@@ -87,13 +87,13 @@ def followscrape(num_requests):
     client, collection = setup_mongo_client('instascrape', 'followers')
 
     driver = webdriver.Firefox()
-    selenium_instagram_login(driver, '../instagram_credentials.json')
+    selenium_instagram_login(driver, 'instagram_credentials.json')
 
     init_url_search = "https://www.instagram.com/graphql/query/?query_id=17851374694183129&variables={{%22id%22:%22{}%22,%22first%22:20}}"
     base_url_search = "https://www.instagram.com/graphql/query/?query_id=17851374694183129&variables={{%22id%22:%22{}%22,%22first%22:500,%22after%22:%22{}%22}}"
 
     for i in range(num_requests):
-        influencer_id = find_next_influencer('../data/ordered_influencers.txt', '../data/scraped_influencers.txt')
+        influencer_id = find_next_influencer('data/ordered_influencers.txt', 'data/scraped_influencers.txt')
 
         # Initial search for followers
         driver.get(init_url_search.format(influencer_id))
@@ -114,7 +114,7 @@ def followscrape(num_requests):
             time.sleep(np.random.uniform(7,10))
 
 
-        write_text(influencer_id, '../data/scraped_influencers.txt')
+        write_text(influencer_id, 'data/scraped_influencers.txt')
         time.sleep(np.random.uniform(7,10))
         print "Finished scraping {} influencers of {}".format(i+1, num_requests)
 
@@ -122,7 +122,3 @@ def followscrape(num_requests):
 
     print "\n Finished scraping {} influencers' followers".format(num_requests)
     return None
-
-
-if __name__ == '__main__':
-    followscrape(10)

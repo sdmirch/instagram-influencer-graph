@@ -73,6 +73,3 @@ def instascrape(page_info_filepath, num_requests):
 
     print "\n Finished scraping {} pages of 12 influencers each".format(num_requests)
     return None
-
-if __name__ == '__main__':
-    instascrape()
