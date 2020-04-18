@@ -46,7 +46,7 @@ def load_json_from_html(driver):
     """
     time.sleep(np.random.uniform(1,2))
     # Clicks on raw-data tab
-    driver.find_element_by_id('tab-1').click()
+    driver.find_element_by_id('rawdata-tab').click()
     data = driver.find_element_by_css_selector('pre.data')
     data_as_json = json.loads(data.text)
     return data_as_json
@@ -87,13 +87,13 @@ def followscrape(num_requests):
     client, collection = setup_mongo_client('instascrape', 'followers')
 
     driver = webdriver.Firefox()
-    selenium_instagram_login(driver, 'instagram_credentials.json')
+    selenium_instagram_login(driver, '/home/emil/Desktop/instagram-influencer-graph/instagram_credentials.json')
 
     init_url_search = "https://www.instagram.com/graphql/query/?query_id=17851374694183129&variables={{%22id%22:%22{}%22,%22first%22:20}}"
     base_url_search = "https://www.instagram.com/graphql/query/?query_id=17851374694183129&variables={{%22id%22:%22{}%22,%22first%22:500,%22after%22:%22{}%22}}"
 
     for i in range(num_requests):
-        influencer_id = find_next_influencer('data/ordered_influencers.txt', 'data/scraped_influencers.txt')
+        influencer_id = find_next_influencer('/home/emil/Desktop/instagram-influencer-graph/data/ordered_influencers.txt', '/home/emil/Desktop/instagram-influencer-graph/data/scraped_influencers.txt')
 
         # Initial search for followers
         driver.get(init_url_search.format(influencer_id))
@@ -114,7 +114,7 @@ def followscrape(num_requests):
             time.sleep(np.random.uniform(7,10))
 
 
-        write_text(influencer_id, 'data/scraped_influencers.txt')
+        write_text(influencer_id, '..data/scraped_influencers.txt')
         time.sleep(np.random.uniform(7,10))
         print "Finished scraping {} influencers of {}".format(i+1, num_requests)
 
@@ -122,3 +122,6 @@ def followscrape(num_requests):
 
     print "\n Finished scraping {} influencers' followers".format(num_requests)
     return None
+
+if __name__ == '__main__':
+    followscrape(100)
