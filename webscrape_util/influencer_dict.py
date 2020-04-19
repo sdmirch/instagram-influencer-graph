@@ -4,7 +4,7 @@ import networkx as nx
 from collections import Counter
 from unidecode import unidecode
 
-from scrape_util import setup_mongo_client, write_json, write_list
+from webscrape_util.scrape_util import setup_mongo_client, write_json, write_list
 
 def create_influencer_dict(filepath_json, return_dict=False):
     """
@@ -22,7 +22,7 @@ def create_influencer_dict(filepath_json, return_dict=False):
     Output: None
     """
 
-    client, collection = setup_mongo_client('instascrape', 'test')
+    client, collection = setup_mongo_client('instascrape2', 'tennis')
 
     # Retrieve shortcodes and ids from influencers in MongoDB
     shortcodes_ids = []
@@ -101,7 +101,7 @@ def create_hashtag_likes_dict(filepath_json, return_dict=False):
     Output: None
     """
 
-    client, collection = setup_mongo_client('instascrape', 'test')
+    client, collection = setup_mongo_client('instascrape2', 'tennis')
 
     influencers = {}
     cursor = collection.find({})
@@ -114,7 +114,7 @@ def create_hashtag_likes_dict(filepath_json, return_dict=False):
             add_hashtag_posts_likes(influencers, user_id, x)
 
     # Remove profiles that have been deleted since initial scraping
-    del influencers['4018066784']
+    # del influencers['4018066784']
 
     client.close()
 
@@ -198,7 +198,7 @@ def create_caption_dict():
         captions (dict): Dcitionary with influencer id, list of posts, and list of captions.s
     """
 
-    client, collection = setup_mongo_client('instascrape', 'test')
+    client, collection = setup_mongo_client('instascrape2', 'tennis')
 
     captions = {}
     cursor = collection.find({})
@@ -216,3 +216,5 @@ def create_caption_dict():
     client.close()
 
     return captions
+create_hashtag_likes_dict("../date/hashtag_likes_dict.json")
+# create_influencer_dict("date/create_ind_dict.json")
